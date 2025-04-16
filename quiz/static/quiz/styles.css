@@ -1,0 +1,53 @@
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.8) 0%, rgba(255, 215, 0, 0.2) 100%);
+    color: #fff;
+}
+
+/* Header Styling */
+header {
+    background-color: transparent;
+}
+
+header img {
+    height: 60px;
+}
+
+header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+}
+
+/* About Section */
+.about-section h2 {
+    font-size: 2rem;
+}
+
+/* Explore Quizzes Button */
+.btn-primary {
+    background-color: #007bff;
+    border-radius: 30px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Login and Sign Up Buttons */
+.auth-buttons a {
+    padding: 6px 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 20px;
+}
+
+.auth-buttons a.btn-outline-light {
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+.auth-buttons a.btn-outline-light:hover {
+    background-color: #fff;
+    color: #000; /* Black text on hover */
+}

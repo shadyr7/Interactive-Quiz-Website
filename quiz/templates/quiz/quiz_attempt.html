@@ -1,0 +1,109 @@
+{% extends "quiz/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-warning text-center">{{ quiz.title }}</h1>
+    <p class="text-light text-center">{{ quiz.description }}</p>
+    
+    <!-- Timer Display -->
+    <div class="timer-container text-center mb-4">
+        <h3 class="text-light">Time Remaining: <span id="timer" class="text-warning">05:00</span></h3>
+        <div class="progress">
+            <div id="timer-progress" class="progress-bar bg-warning" role="progressbar" style="width: 100%"></div>
+        </div>
+    </div>
+
+    <form method="post" action="{% url 'submit_quiz' quiz.id %}" id="quiz-form">
+        {% csrf_token %}
+        <input type="hidden" name="time_taken" id="time-taken" value="0">
+        
+        {% for question in questions %}
+            <div class="question-card card bg-dark text-light mb-4 p-4">
+                <h4>{{ forloop.counter }}. {{ question.text }}</h4>
+                
+                <!-- Dynamic Question Image Display -->
+                {% if question.image %}
+                    <div class="question-image-container text-center my-3">
+                        <img src="{{ question.image.url }}" alt="Question Image" class="img-fluid rounded shadow" style="max-height: 300px;">
+                    </div>
+                {% endif %}
+                
+                <div class="options mt-3">
+                    {% for option in question.options.all %}
+                        <div class="form-check mb-2">
+                            <input type="radio" name="question_{{ question.id }}" value="{{ option.id }}" 
+                                   class="form-check-input" id="option_{{ option.id }}" required>
+                            <label class="form-check-label" for="option_{{ option.id }}">{{ option.text }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-warning">No questions available for this quiz.</div>
+        {% endfor %}
+        
+        <button type="submit" class="btn btn-primary btn-lg d-block mx-auto mb-5">Submit Quiz</button>
+    </form>
+</div>
+
+<script>
+    // Timer functionality
+    let timeLimit = {{ quiz.time_limit|default:"300" }};
+    const originalTime = timeLimit;
+    const timer = document.getElementById('timer');
+    const timerProgress = document.getElementById('timer-progress');
+    const timeTakenField = document.getElementById('time-taken');
+    const startTime = new Date().getTime();
+    let timerInterval; // Store interval reference for proper cleanup
+    
+    function updateTimer() {
+        if (timeLimit <= 0) {
+            // Time's up - automatically submit
+            clearInterval(timerInterval); // Clear interval to prevent multiple submissions
+            document.getElementById('quiz-form').submit();
+            return;
+        }
+        
+        const minutes = Math.floor(timeLimit / 60);
+        const seconds = timeLimit % 60;
+        
+        // Update timer display
+        timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        // Update progress bar
+        const percentRemaining = (timeLimit / originalTime) * 100;
+        timerProgress.style.width = `${percentRemaining}%`;
+        
+        // Change color as time decreases
+        if (percentRemaining < 25) {
+            timerProgress.className = "progress-bar bg-danger";
+            timer.className = "text-danger";
+        } else if (percentRemaining < 50) {
+            timerProgress.className = "progress-bar bg-warning";
+        }
+        
+        // Calculate time taken so far
+        const currentTime = new Date().getTime();
+        const elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
+        timeTakenField.value = elapsedSeconds;
+        
+        timeLimit--;
+    }
+    
+    // Start timer when page loads
+    window.onload = function() {
+        // Initial call to set up the display
+        updateTimer();
+        // Set interval for recurring updates (every second)
+        timerInterval = setInterval(updateTimer, 1000);
+    };
+    
+    // Prevent accidental navigation away
+    window.addEventListener('beforeunload', function(e) {
+        // Cancel the event
+        e.preventDefault();
+        // Chrome requires returnValue to be set
+        e.returnValue = '';
+    });
+</script>
+{% endblock %}

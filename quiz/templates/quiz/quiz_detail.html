@@ -1,0 +1,11 @@
+{% extends "quiz/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>{{ quiz.title }}</h1>
+    <p>{{ quiz.description }}</p>
+
+    <!-- Button to attempt the quiz -->
+    <a href="{% url 'quiz_attempt' quiz.id %}" class="btn btn-success">Attempt Quiz</a>
+</div>
+{% endblock %}

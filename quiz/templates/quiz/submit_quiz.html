@@ -1,0 +1,45 @@
+{% extends "quiz/base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-warning text-center">{{ quiz.title }} - Results</h1>
+    <div class="score-box bg-dark text-light p-4 rounded shadow-lg mt-4 text-center">
+        <h2>Your Score: <span class="text-primary">{{ score }}</span> / {{ total_questions }}</h2>
+        <p>Time taken: <span class="text-info">{{ time_taken }}</span> seconds</p>
+        <p>Your rank: <span class="text-info">#{{ user_rank }}</span></p>
+    </div>
+    <div class="mt-5">
+        {% if results %}
+            {% for result in results %}
+                <div class="card mb-4 border-danger">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ forloop.counter }}. {{ result.question.text }}</h5>
+                        {% if result.question.image %}
+                            <img src="{{ result.question.image.url }}" class="img-fluid mb-3" style="max-height:200px;">
+                        {% endif %}
+                        <p>
+                            <strong>Your answer:</strong>
+                            {% if result.selected_option %}
+                                <span class="text-danger">
+                                    {{ result.selected_option.text }}
+                                </span>
+                            {% else %}
+                                <span class="text-warning">No answer selected</span>
+                            {% endif %}
+                        </p>
+                        <p>
+                            <strong>Correct answer:</strong>
+                            <span class="text-success">{{ result.correct_option.text }}</span>
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-success text-center">You got all answers correct!</div>
+        {% endif %}
+    </div>
+    <div class="text-center mt-4">
+        <a href="{% url 'leaderboard' quiz.id %}" class="btn btn-warning btn-lg mb-3">View Leaderboard</a>
+        <a href="{% url 'quizzes' %}" class="btn btn-primary btn-lg">Back to Quizzes</a>
+    </div>
+</div>
+{% endblock %}

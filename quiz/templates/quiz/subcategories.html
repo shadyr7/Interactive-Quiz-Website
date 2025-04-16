@@ -1,0 +1,23 @@
+{% extends "quiz/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-warning text-center">{{ category.name }} Subcategories</h1>
+    
+    <div class="row text-center">
+        {% for subcategory in subcategories %}
+            <div class="col-md-4 mb-4">
+                <div class="card bg-dark text-light shadow-lg h-100">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h3 class="card-title text-warning">{{ subcategory.name }}</h3>
+                        <p class="card-text">{{ subcategory.description }}</p>
+                        <a href="{% url 'subcategory_quizzes' subcategory.id %}" class="btn btn-primary mt-auto">
+                            Explore {{ subcategory.name }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
