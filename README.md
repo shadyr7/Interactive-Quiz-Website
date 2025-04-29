@@ -19,4 +19,4 @@ Backend: Django (Python Web Framework)
 
 # 🎥 Demo Video
 Watch the project in action here:
-👉 TRIVIFY - Demo Video
+👉 TRIVIFY - [Video Demo](https://drive.google.com/file/d/1yMjcj8NoB4KHxgQSTCGCMkdNTLN6EtJW/view?usp=sharing)
